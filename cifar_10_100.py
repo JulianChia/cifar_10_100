@@ -38,6 +38,7 @@ class CIFARimages:
     batch_label: List
     filenames: List
     nimages: int
+    nchannels: int
     nrows: int
     ncols: int
     pixels: np.array
@@ -89,7 +90,7 @@ def load_CIFAR(db, path=None, normalise=True, flatten=True, onehot=True):
       train_images = CIFARimages(batch_label=[byte strings],
                                  filenames=[byte strings],
                                  nimages=50000,
-                                 nrows=32, ncols=32,
+                                 nchannels=3, nrows=32, ncols=32,
                                  pixels=np.array())
             if normalise, pixels dtype='float64'
             else,         pixels dtype='uint8'
@@ -114,7 +115,7 @@ def load_CIFAR(db, path=None, normalise=True, flatten=True, onehot=True):
      test_images = CIFARimages(batch_label=[byte strings],
                                filenames=[byte strings],
                                nimages=50000,
-                               nrows=32, ncols=32,
+                               nchannels=3, nrows=32, ncols=32,
                                pixels=np.array())
             if normalise, pixels dtype='float64'
             else,         pixels dtype='uint8'
@@ -211,7 +212,7 @@ def load_CIFAR(db, path=None, normalise=True, flatten=True, onehot=True):
         if not flatten:
             imgs = imgs.reshape((len(imgs), 3, 32, 32))
         imgs = CIFARimages([dataset[b'batch_label']], dataset[b'filenames'],
-                           len(imgs), 32, 32, imgs)
+                           len(imgs), 3, 32, 32, imgs)
         return lbs, imgs
 
     def _get_cifar100_labels_images(batchfile):
@@ -239,7 +240,7 @@ def load_CIFAR(db, path=None, normalise=True, flatten=True, onehot=True):
         if not flatten:
             imgs = imgs.reshape((len(imgs), 3, 32, 32))
         imgs = CIFARimages([dataset[b'batch_label']], dataset[b'filenames'],
-                           len(imgs), 32, 32, imgs)
+                           len(imgs), 3, 32, 32, imgs)
         return lbs, imgs
 
     # 1. Define local args
@@ -339,8 +340,8 @@ def load_CIFAR(db, path=None, normalise=True, flatten=True, onehot=True):
             pixels = pixels / 255
         if not flatten:
             pixels = pixels.reshape((len(pixels), 3, 32, 32))
-        train_images = CIFARimages(batchlabels, filenames, len(pixels), 32, 32,
-                                   pixels)
+        train_images = CIFARimages(batchlabels, filenames, len(pixels),
+                                   3, 32, 32, pixels)
 
         # 4.4 Get Test datasets
         test_dataset_file = datasets[db][2] / cifar10_batches[5]
